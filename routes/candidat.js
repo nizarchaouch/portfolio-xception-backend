@@ -12,6 +12,7 @@ router.post("/reset", candUser.reset);
 router.put("/update/:id", candController.updateCand);
 
 router.get("/verifier/:mail", candController.verifCand);
+router.get("/candidats", candController.getAll);
 router.get("/", candController.getCand);
 
 module.exports = router;

@@ -54,7 +54,7 @@ const signup = async (req, res) => {
 
 const login = async (req, res) => {
   const data = req.body;
-  authController.authenticate(data, "Recruteur", res);
+  authController.authenticate(data, res);
 };
 
 const getRec = async (req, res) => {

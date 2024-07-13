@@ -129,12 +129,22 @@ const getCand = async (req, res) => {
   return authController.getUser(req, res);
 };
 
+const getAll = async (req, res) => {
+  try {
+    const docs = await candModel.find({ role: "candidat" });
+    res.status(200).json(docs);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: ERROR_MESSAGES.UNABLE_TO_ADD });
+  }
+};
+
 const logout = (req, res) => {
   authController.logout(res);
 };
 
 const updateCand = async (req, res) => {
-  authController.updateUser(req, "candidat", res);
+  authController.updateUser(req, res);
 };
 
 const verifCand = async (req, res) => {
@@ -157,4 +167,12 @@ const verifCand = async (req, res) => {
       .json({ message: "Erreur lors de la vérification du candidat" });
   }
 };
-module.exports = { signup, login, getCand, logout, updateCand, verifCand };
+module.exports = {
+  signup,
+  login,
+  getCand,
+  getAll,
+  logout,
+  updateCand,
+  verifCand,
+};

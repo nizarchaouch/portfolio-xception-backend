@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const model = require("../models/user");
-const { errorMonitor } = require("nodemailer/lib/xoauth2");
+// const { errorMonitor } = require("nodemailer/lib/xoauth2");
 
 const ERROR_MESSAGES = {
   INTERNAL_SERVER_ERROR: "Internal Server Error",
@@ -22,7 +22,7 @@ const authenticate = async (data, role, res) => {
       return res.status(404).json({ message: `${role} not found` });
     }
 
-    const isPasswordValid = bcrypt.compare(data.password, user.password);
+    const isPasswordValid = await bcrypt.compare(data.password, user.password);
     if (!isPasswordValid) {
       return res
         .status(400)
@@ -39,14 +39,18 @@ const authenticate = async (data, role, res) => {
     delete userWithoutPassword.password;
 
     // Generate JWT
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "24h",
+    });
 
     res.cookie("jwt", token, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    return res.status(200).json({ message: "Successfully Logged In" });
+    return res
+      .status(200)
+      .json({ message: "Successfully Logged In", user: userWithoutPassword });
   } catch (error) {
     console.error(error);
     return res
@@ -106,26 +110,34 @@ const updateUser = async (req, res) => {
     const newPassword = req.body.password;
 
     if (newPassword) {
-      // Générer le sel et hacher le nouveau mot de passe
+      // Generate salt and hash the new password
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-      // Mettre à jour le candidat avec le nouveau mot de passe haché
-      await model.findByIdAndUpdate(
+      // Update the user with the new hashed password
+      const updatedUser = await model.findByIdAndUpdate(
         id,
         { password: hashedPassword },
-        { new: true } // Retourner le document mis à jour
+        { new: true } // Return the updated document
       );
+
+      if (!updatedUser) {
+        return res.status(404).json({ message: ERROR_MESSAGES.USER_NOT_FOUND });
+      }
     } else {
-      // Si le mot de passe n'est pas modifié, mettre à jour les autres informations
-      const updateUser = await model.findByIdAndUpdate(id, req.body);
-      if (!updateUser) {
+      // If the password is not modified, update other information
+      const updatedUser = await model.findByIdAndUpdate(id, req.body, {
+        new: true,
+      });
+
+      if (!updatedUser) {
         return res.status(404).json({ message: ERROR_MESSAGES.USER_NOT_FOUND });
       }
     }
 
-    res.status(201).json({ message: `User mis à jour avec succès` });
+    res.status(200).json({ message: "User updated successfully" });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
   }
 };
