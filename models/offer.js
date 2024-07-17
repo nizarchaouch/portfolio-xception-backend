@@ -13,6 +13,10 @@ const offerSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  secteur: {
+    type: String,
+    require: true,
+  },
   position: {
     type: String,
     require: true,
@@ -32,17 +36,6 @@ const offerSchema = new mongoose.Schema({
   typeOffer: {
     type: String,
     require: true,
-    enum: [
-      "CDI",
-      "CDD",
-      "CIVP",
-      "Karama",
-      "Temps plein",
-      "Saisonnier",
-      "Freelance / Indépendant",
-      "Temps partiel",
-      "Stage",
-    ],
   },
   experience: {
     type: String,

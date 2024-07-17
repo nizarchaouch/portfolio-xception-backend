@@ -14,5 +14,6 @@ router.put("/update/:id", candController.updateCand);
 router.get("/verifier/:mail", candController.verifCand);
 router.get("/candidats", candController.getAll);
 router.get("/", candController.getCand);
+router.get("/laste_user", candUser.getLast);
 
 module.exports = router;

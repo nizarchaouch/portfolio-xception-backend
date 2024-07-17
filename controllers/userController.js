@@ -3,7 +3,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const model = require("../models/user");
-// const { errorMonitor } = require("nodemailer/lib/xoauth2");
 
 const ERROR_MESSAGES = {
   INTERNAL_SERVER_ERROR: "Internal Server Error",
@@ -248,4 +247,33 @@ const reset = async (req, res) => {
   }
 };
 
-module.exports = { authenticate, getUser, logout, updateUser, forget, reset };
+const getLast = async (req, res) => {
+  try {
+    const docs = await model
+      .find({ role: { $in: ["recruteur", "candidat"] } })
+      .sort({ _id: -1 }) // Tri par _id décroissant pour obtenir les plus récents en premier
+      .limit(10); // Limite à 10 résultats
+
+    // Convertir chaque document en objet et supprimer le mot de passe
+    const usersWithoutPasswords = docs.map((doc) => {
+      const user = doc.toObject(); // Convertir en objet JS
+      delete user.password; // Supprimer le mot de passe
+      return user;
+    });
+
+    res.status(200).json(usersWithoutPasswords);
+  } catch (error) {
+    console.log(error);
+    return res.status(404).json({ error: ERROR_MESSAGES.USER_NOT_FOUND });
+  }
+};
+
+module.exports = {
+  authenticate,
+  getUser,
+  logout,
+  updateUser,
+  forget,
+  reset,
+  getLast,
+};

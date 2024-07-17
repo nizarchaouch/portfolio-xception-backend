@@ -9,5 +9,6 @@ router.post("/logout", recruController.logout);
 router.put("/update/:id", recruController.updateRec);
 
 router.get("/RecInfo/:id", recruController.getRecInfo);
+router.get("/recruteurs", recruController.getAll);
 
 module.exports = router;

@@ -12,6 +12,7 @@ const add = async (req, res) => {
       idRec: data.idRec,
       logo: data.logo,
       nomEntreprise: data.nomEntreprise,
+      secteur: data.secteur,
       position: data.position,
       titre: data.titre,
       salaire: data.salaire,

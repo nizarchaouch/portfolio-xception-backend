@@ -60,6 +60,15 @@ const login = async (req, res) => {
 const getRec = async (req, res) => {
   authController.getUser(req, res);
 };
+const getAll = async (req, res) => {
+  try {
+    const docs = await recruModel.find({ role: "recruteur" });
+    res.status(200).json(docs);
+  } catch (error) {
+    console.log(error);
+    return res.status(404).json({ error: ERROR_MESSAGES.RECRUTEUR_NOT_FOUND });
+  }
+};
 const getRecInfo = async (req, res) => {
   try {
     const id = req.params.id;
@@ -84,4 +93,12 @@ const updateRec = async (req, res) => {
   authController.updateUser(req, "Recruteur", res);
 };
 
-module.exports = { signup, login, getRec, getRecInfo, logout, updateRec };
+module.exports = {
+  signup,
+  login,
+  getRec,
+  getRecInfo,
+  logout,
+  updateRec,
+  getAll,
+};
