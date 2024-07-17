@@ -86,5 +86,22 @@ const showOfferApp = async (req, res) => {
       .json({ message: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
   }
 };
+const deleteCandOffer = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const CandOffer = await candModel.findByIdAndDelete(id);
 
-module.exports = { add, showCandOffer, showOfferApp };
+    if (!CandOffer) {
+      return res.status(404).json({ message: ERROR_MESSAGES.CANDIDAT_NOT_FOUND });
+    }
+
+    res.status(200).json({ message: "Supprimé" });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
+  }
+};
+
+module.exports = { add, showCandOffer, showOfferApp, deleteCandOffer };

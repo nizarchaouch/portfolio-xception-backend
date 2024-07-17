@@ -132,7 +132,12 @@ const getCand = async (req, res) => {
 const getAll = async (req, res) => {
   try {
     const docs = await candModel.find({ role: "candidat" });
-    res.status(200).json(docs);
+    const usersWithoutPasswords = docs.map((doc) => {
+      const user = doc.toObject(); // Convertir en objet JS
+      delete user.password; // Supprimer le mot de passe
+      return user;
+    });
+    res.status(200).json(usersWithoutPasswords);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: ERROR_MESSAGES.UNABLE_TO_ADD });

@@ -63,7 +63,12 @@ const getRec = async (req, res) => {
 const getAll = async (req, res) => {
   try {
     const docs = await recruModel.find({ role: "recruteur" });
-    res.status(200).json(docs);
+    const usersWithoutPasswords = docs.map((doc) => {
+      const user = doc.toObject(); // Convertir en objet JS
+      delete user.password; // Supprimer le mot de passe
+      return user;
+    });
+    res.status(200).json(usersWithoutPasswords);
   } catch (error) {
     console.log(error);
     return res.status(404).json({ error: ERROR_MESSAGES.RECRUTEUR_NOT_FOUND });
