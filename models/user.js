@@ -51,6 +51,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  statut: {
+    type: Boolean,
+    default: true,
+  },
   role: {
     type: String,
     enum: ["candidat", "recruteur", "admin"],
@@ -67,6 +71,7 @@ const userSchema = new mongoose.Schema({
   logoPath: {
     type: String,
     require: true,
+    default: "/defaultprofil.png",
   },
   description: {
     type: String,

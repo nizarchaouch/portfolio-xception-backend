@@ -52,6 +52,61 @@ const signup = async (req, res) => {
   }
 };
 
+const add = async (req, res) => {
+  const data = req.body;
+  let existingrecru;
+
+  try {
+    // Vérification si le recruteur existe déjà
+    existingrecru = await recruModel.findOne({ mail: data.mail });
+  } catch (err) {
+    console.log(
+      "Erreur lors de la vérification de l'existence du recruteur:",
+      err
+    );
+    return res.status(500).json({ error: "ErreurServeur" });
+  }
+
+  if (existingrecru) {
+    return res.status(400).json({ error: "Recruteur Existe Deja" });
+  }
+
+  try {
+    // Hachage du mot de passe
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(data.password, salt);
+
+    // Création du nouveau recruteur
+    const recruteur = new recruModel({
+      imagePath: data.imagePath,
+      logoPath: data.logoPath,
+      nomEntreprise: data.nomEntreprise,
+      fondee: data.fondee,
+      taill_ent: data.taill_ent,
+      description: data.description,
+      identifiant: data.identifiant,
+      secteur: data.secteur,
+      nom: data.nom,
+      prenom: data.prenom,
+      dateNais: data.dateNais,
+      tel: data.tel,
+      civilite: data.civilite,
+      adress: data.adress,
+      mail: data.mail,
+      socialLinks: data.socialLinks,
+      password: hashedPassword,
+      role: "recruteur",
+    });
+
+    await recruteur.save();
+
+    return res.status(201).json({ message: "Ajout réussi" });
+  } catch (err) {
+    console.log("Erreur lors de l'ajout du recruteur:", err);
+    return res.status(500).json({ error: "Impossible d'ajouter le recruteur" });
+  }
+};
+
 const login = async (req, res) => {
   const data = req.body;
   authController.authenticate(data, res);
@@ -95,15 +150,57 @@ const logout = (req, res) => {
 };
 
 const updateRec = async (req, res) => {
-  authController.updateUser(req, "Recruteur", res);
+  authController.updateUser(req, res);
+};
+const updateVerif = async (req, res) => {
+  try {
+    const data = req.body;
+    const id = req.params.id;
+    // If the password is not modified, update other information
+    const updatedUser = await recruModel.findByIdAndUpdate(id, {
+      verifier: data.verifier,
+      statut: data.statut,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: ERROR_MESSAGES.USER_NOT_FOUND });
+    }
+
+    res.status(200).json({ message: "état mis à jour avec succès" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
+  }
 };
 
+const deleteRecu = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const recu = await recruModel.findByIdAndDelete(id);
+
+    if (!recu) {
+      return res
+        .status(404)
+        .json({ error: ERROR_MESSAGES.RECRUTEUR_NOT_FOUND });
+    }
+
+    res.status(200).json({ message: "supprimer avec succès" });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
+  }
+};
 module.exports = {
   signup,
+  add,
   login,
   getRec,
   getRecInfo,
   logout,
   updateRec,
   getAll,
+  updateVerif,
+  deleteRecu,
 };
