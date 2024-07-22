@@ -96,6 +96,7 @@ const add = async (req, res) => {
       socialLinks: data.socialLinks,
       password: hashedPassword,
       role: "recruteur",
+      statut: true,
     });
 
     await recruteur.save();

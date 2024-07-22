@@ -125,6 +125,56 @@ const login = async (req, res) => {
   authController.authenticate(data, "Candidat", res);
 };
 
+const add = async (req, res) => {
+  const data = req.body;
+  let existingrecru;
+
+  try {
+    // Vérification si le recruteur existe déjà
+    existingrecru = await candModel.findOne({ mail: data.mail });
+  } catch (err) {
+    console.log(
+      "Erreur lors de la vérification de l'existence du candidat:",
+      err
+    );
+    return res.status(500).json({ error: "ErreurServeur" });
+  }
+
+  if (existingrecru) {
+    return res.status(400).json({ error: "Candidat Existe Deja" });
+  }
+
+  try {
+    // Hachage du mot de passe
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(data.password, salt);
+
+    // Création du nouveau recruteur
+    const recruteur = new candModel({
+      imagePath: data.imagePath,
+      nom: data.nom,
+      prenom: data.prenom,
+      dateNais: data.dateNais,
+      tel: data.tel,
+      civilite: data.civilite,
+      adress: data.adress,
+      mail: data.mail,
+      titre_emploi: data.titre_emploi,
+      socialLinks: data.socialLinks,
+      password: hashedPassword,
+      role: "candidat",
+      statut: true,
+    });
+
+    await recruteur.save();
+
+    return res.status(201).json({ message: "Ajout réussi" });
+  } catch (err) {
+    console.log("Erreur lors de l'ajout du recruteur:", err);
+    return res.status(500).json({ error: "Impossible d'ajouter le recruteur" });
+  }
+};
+
 const getCand = async (req, res) => {
   return authController.getUser(req, res);
 };
@@ -175,6 +225,7 @@ const verifCand = async (req, res) => {
 module.exports = {
   signup,
   login,
+  add,
   getCand,
   getAll,
   logout,

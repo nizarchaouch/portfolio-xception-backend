@@ -71,7 +71,6 @@ const userSchema = new mongoose.Schema({
   logoPath: {
     type: String,
     require: true,
-    default: "/defaultprofil.png",
   },
   description: {
     type: String,

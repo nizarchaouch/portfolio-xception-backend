@@ -5,6 +5,7 @@ const candUser = require("../controllers/userController");
 
 router.post("/signup", candController.signup);
 router.post("/login", candController.login);
+router.post("/add_candidat", candController.add);
 router.post("/logout", candController.logout);
 router.post("/forgot", candUser.forget);
 router.post("/reset", candUser.reset);

@@ -92,4 +92,4 @@ const deleteOffer = async (req, res) => {
   }
 };
 
-module.exports = { add, showAll, showRec, updateOffer, deleteOffer };
+module.exports = { add, showAll, showRec, updateOffer, deleteOffer, showById };
