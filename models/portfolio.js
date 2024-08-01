@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 const blocSchema = new mongoose.Schema({
-  type: {
+  id: {
     type: String,
     required: true,
   },
-  content: {
+  type: {
     type: String,
     required: true,
   },

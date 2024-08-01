@@ -8,6 +8,7 @@ router.put("/update/:id", offerController.updateOffer);
 
 router.get("/show/all", offerController.showAll);
 router.get("/show/:id", offerController.showRec);
+router.get("/showById/:id", offerController.showById);
 
 router.delete("/delete/:id", offerController.deleteOffer);
 

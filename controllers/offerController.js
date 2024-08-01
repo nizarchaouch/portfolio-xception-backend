@@ -59,6 +59,19 @@ const showRec = async (req, res) => {
   }
 };
 
+const showById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const offers = await offerModel.findById(id);
+    res.status(200).json(offers);
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
+  }
+};
+
 const updateOffer = async (req, res) => {
   try {
     const id = req.params.id;
