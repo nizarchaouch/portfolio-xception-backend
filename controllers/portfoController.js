@@ -6,7 +6,7 @@ const ERROR_MESSAGES = {
 };
 
 const add = async (req, res) => {
-  const { idCandidat, pages } = req.body;
+  const { idCandidat,navbar, pages } = req.body;
 
   // Validation des entrées
   if (!idCandidat || !pages) {
@@ -16,6 +16,7 @@ const add = async (req, res) => {
   try {
     const newPortfolio = new portfoModel({
       idCandidat,
+      navbar,
       pages,
     });
 
@@ -30,4 +31,17 @@ const add = async (req, res) => {
   }
 };
 
-module.exports = { add };
+const getById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const portfolio = await portfoModel.find({ idCandidat: id });
+    res.status(200).json(portfolio);
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
+  }
+};
+
+module.exports = { add, getById };

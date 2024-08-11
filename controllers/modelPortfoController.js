@@ -2,7 +2,7 @@ const portfoModel = require("../models/modelPortfolio");
 const ERROR_MESSAGES = {
   INTERNAL_SERVER_ERROR: "Internal Server Error",
   UNABLE_TO_ADD: "Unable to add",
-  PORTFOLIO_NOT_FOUND: "portfolio not found",
+  PORTFOLIO_NOT_FOUND: "model portfolio not found",
 };
 
 const add = async (req, res) => {
@@ -30,4 +30,14 @@ const add = async (req, res) => {
   }
 };
 
-module.exports = { add };
+const getAll = async (req, res) => {
+  try {
+    const docs = await portfoModel.find();
+    res.status(200).json(docs);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
+  }
+};
+
+module.exports = { add, getAll };
