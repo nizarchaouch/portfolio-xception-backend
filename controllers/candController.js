@@ -11,7 +11,9 @@ const ERROR_MESSAGES = {
 const signup = async (req, res) => {
   const data = req.body;
   let existingcand;
-
+  if (!data.mail || !data.password) {
+    return res.status(400).json({ error: "mail and password are required" });
+  }
   try {
     existingcand = await candModel.findOne({ mail: data.mail });
   } catch (err) {
