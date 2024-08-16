@@ -10,7 +10,9 @@ const ERROR_MESSAGES = {
 const signup = async (req, res) => {
   const data = req.body;
   let existingrecru;
-
+  if (!data.mail || !data.password) {
+    return res.status(400).json({ error: "mail and password are required" });
+  }
   try {
     existingrecru = await recruModel.findOne({ mail: data.mail });
   } catch (err) {
