@@ -6,7 +6,7 @@ const ERROR_MESSAGES = {
 };
 
 const add = async (req, res) => {
-  const { idCandidat,navbar, pages } = req.body;
+  const { idCandidat, navbar, pages } = req.body;
 
   // Validation des entrées
   if (!idCandidat || !pages) {
@@ -14,17 +14,38 @@ const add = async (req, res) => {
   }
 
   try {
-    const newPortfolio = new portfoModel({
-      idCandidat,
-      navbar,
-      pages,
-    });
+    const portfolio = await portfoModel.find({ idCandidat });
 
-    const savedPortfolio = await newPortfolio.save();
-    console.log("Portfolio added successfully:", savedPortfolio);
+    if (portfolio.length > 0) {
+      // Update the existing portfolio
+      await portfoModel.findByIdAndUpdate(
+        portfolio[0]._id,
+        {
+          navbar,
+          pages,
+        },
+        { new: true } // This option ensures the updated document is returned
+      );
+      res.status(200).json({ message: "Portfolio updated successfully" });
+    } else {
+      // Create a new portfolio
+      const newPortfolio = new portfoModel({
+        idCandidat,
+        navbar,
+        pages,
+      });
 
-    // Envoi de la réponse au client
-    res.status(201).json({ message: savedPortfolio });
+      const savedPortfolio = await newPortfolio.save();
+      console.log("Portfolio added successfully:", savedPortfolio);
+
+      // Envoi de la réponse au candidat
+      res
+        .status(201)
+        .json({
+          message: "Portfolio added successfully",
+          portfolio: savedPortfolio,
+        });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
@@ -44,4 +65,17 @@ const getById = async (req, res) => {
   }
 };
 
-module.exports = { add, getById };
+const checkPortfolioExists = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const portfolio = await portfoModel.find({ idCandidat: id });
+    res.status(200).json(portfolio.length > 0);
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
+  }
+};
+
+module.exports = { add, getById, checkPortfolioExists };
