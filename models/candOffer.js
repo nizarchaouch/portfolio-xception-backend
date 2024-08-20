@@ -13,12 +13,12 @@ const candSchema = new mongoose.Schema({
     type: Date,
     require: true,
   },
-  typeCv: {
+  cv: {
     type: String,
-    enum: ["cv", "portfolio"],
+    enum: ["CV", "Portfolio"],
   },
-  letterMot: {
-    typr: String,
+  letter: {
+    type: String,
   },
   etat: {
     type: String,

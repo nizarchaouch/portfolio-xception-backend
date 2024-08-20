@@ -17,19 +17,23 @@ const add = async (req, res) => {
   });
 
   if (existing) {
-    return res.status(409).json({ message: "Candidature already exists" });
+    return res.status(409).json({ error: "Déjà postulé à cette offre" });
   }
 
   try {
     const candoffer = new candModel({
       idCandidat: data.idCandidat,
       idOffer: data.idOffer,
-      date: new Date(),
+      cv: data.cv,
+      letter: data.letter,
+      date: new Date(),      
     });
+    console.log(candoffer);
+    
     await candoffer.save();
-    return res.status(201).json({ message: candoffer });
+    return res.status(201).json({ message: "Postuler successful" });
   } catch (error) {
-    return res.status(201).json({ message: ERROR_MESSAGES.UNABLE_TO_ADD });
+    return res.status(201).json({ error: ERROR_MESSAGES.UNABLE_TO_ADD });
   }
 };
 
@@ -92,7 +96,9 @@ const deleteCandOffer = async (req, res) => {
     const CandOffer = await candModel.findByIdAndDelete(id);
 
     if (!CandOffer) {
-      return res.status(404).json({ message: ERROR_MESSAGES.CANDIDAT_NOT_FOUND });
+      return res
+        .status(404)
+        .json({ message: ERROR_MESSAGES.CANDIDAT_NOT_FOUND });
     }
 
     res.status(200).json({ message: "Supprimé" });
