@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const blocSchema = new mongoose.Schema({
   id: {
-    type: String,
+    type: Number,
     required: true,
   },
   type: {
@@ -17,7 +17,7 @@ const blocSchema = new mongoose.Schema({
 
 const pageSchema = new mongoose.Schema({
   id: {
-    type: String,
+    type: Number,
     required: true,
   },
   name: {
@@ -27,24 +27,24 @@ const pageSchema = new mongoose.Schema({
   bloc: [blocSchema],
 }, { minimize: false });
 
-const navSettingsSchema = new mongoose.Schema({
-  navbar: {
-    type: Object,
-    default: {},
-  },
-  logo: {
-    type: Object,
-    default: {},
-  },
-  links: {
-    type: Object,
-    default: {},
-  },
-}, { minimize: false });
+// const navSettingsSchema = new mongoose.Schema({
+//   navbar: {
+//     type: Object,
+//     default: {},
+//   },
+//   logo: {
+//     type: Object,
+//     default: {},
+//   },
+//   links: {
+//     type: Object,
+//     default: {},
+//   },
+// }, { minimize: false });
 
 const navSchema = new mongoose.Schema({
   id: {
-    type: String,
+    type: Number,
     required: true,
   },
   type: {
@@ -52,7 +52,7 @@ const navSchema = new mongoose.Schema({
     required: true,
   },
   settings: {
-    type: navSettingsSchema,
+    type: Object,
     default: {},
   },
 }, { minimize: false });
