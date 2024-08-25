@@ -11,6 +11,7 @@ const ERROR_MESSAGES = {
   UNAUTHENTICATED: "Unauthenticated",
   USER_NOT_FOUND: "User not found",
   EMAIL_NOT_VERIFIED: "Email not verified",
+  ACCOUNT_BLOCKED: "Le compte est bloqué a travaillé admin",
 };
 
 const authenticate = async (data, role, res) => {
@@ -28,10 +29,12 @@ const authenticate = async (data, role, res) => {
         .json({ message: ERROR_MESSAGES.INVALID_CREDENTIALS });
     }
 
+    if (!user.statut) {
+      return res.status(401).json({ error: ERROR_MESSAGES.ACCOUNT_BLOCKED });
+    }
+
     if (!user.verifier) {
-      return res
-        .status(401)
-        .json({ message: ERROR_MESSAGES.EMAIL_NOT_VERIFIED });
+      return res.status(401).json({ error: ERROR_MESSAGES.EMAIL_NOT_VERIFIED });
     }
 
     const userWithoutPassword = user.toJSON();

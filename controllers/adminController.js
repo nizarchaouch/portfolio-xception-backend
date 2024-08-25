@@ -115,7 +115,7 @@ const addAdmin = async (req, res) => {
       }
     });
 
-    return res.status(201).json({ message: "Inscription réussie" });
+    return res.status(201).json({ message: "Ajouté avec succès" });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: ERROR_MESSAGES.UNABLE_TO_ADD });
@@ -145,7 +145,7 @@ const logout = (req, res) => {
   authController.logout(res);
 };
 
-const updateCand = async (req, res) => {
+const updateAdmin = async (req, res) => {
   authController.updateUser(req, res);
 };
 module.exports = {
@@ -154,5 +154,5 @@ module.exports = {
   getCand,
   getAll,
   logout,
-  updateCand,
+  updateAdmin,
 };

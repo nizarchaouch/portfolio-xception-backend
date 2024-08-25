@@ -62,7 +62,6 @@ const userSchema = new mongoose.Schema({
   },
   socialLinks: {
     type: Array,
-    require: false,
   },
   // recruteur
   nomEntreprise: {

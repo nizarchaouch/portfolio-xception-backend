@@ -9,9 +9,9 @@ router.post("/logout", adminController.logout);
 router.post("/forgot", user.forget);
 router.post("/reset", user.reset);
 
-router.put("/update/:id", adminController.updateCand);
+router.put("/update/:id", adminController.updateAdmin);
 
-router.get("/admins", adminController.getAll);
+router.get("/getAll", adminController.getAll);
 router.get("/", adminController.getCand);
 
 module.exports = router;
