@@ -26,10 +26,10 @@ const add = async (req, res) => {
       idOffer: data.idOffer,
       cv: data.cv,
       letter: data.letter,
-      date: new Date(),      
+      date: new Date(),
     });
     console.log(candoffer);
-    
+
     await candoffer.save();
     return res.status(201).json({ message: "Postuler successful" });
   } catch (error) {
@@ -90,6 +90,7 @@ const showOfferApp = async (req, res) => {
       .json({ message: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
   }
 };
+
 const deleteCandOffer = async (req, res) => {
   try {
     const id = req.params.id;
@@ -110,4 +111,32 @@ const deleteCandOffer = async (req, res) => {
   }
 };
 
-module.exports = { add, showCandOffer, showOfferApp, deleteCandOffer };
+const changeEtatCandidateur = async (req, res) => {
+  try {
+    const { idOffer, idCandidat, reponse } = req.body;
+
+    const updateCand = await candModel.findOneAndUpdate(
+      { idOffer: idOffer, idCandidat: idCandidat }, // Filter criteria
+      { etat: reponse }, // Fields to update
+    );
+
+    if (!updateCand) {
+      return res.status(404).json({ message: "L'état n'a pas été modifié" });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "État modifié avec succès", updateCand });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports = {
+  add,
+  showCandOffer,
+  showOfferApp,
+  deleteCandOffer,
+  changeEtatCandidateur,
+};
