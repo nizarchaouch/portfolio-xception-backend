@@ -117,7 +117,7 @@ const changeEtatCandidateur = async (req, res) => {
 
     const updateCand = await candModel.findOneAndUpdate(
       { idOffer: idOffer, idCandidat: idCandidat }, // Filter criteria
-      { etat: reponse }, // Fields to update
+      { etat: reponse } // Fields to update
     );
 
     if (!updateCand) {

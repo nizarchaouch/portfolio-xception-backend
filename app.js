@@ -17,6 +17,7 @@ const CandOfferRouter = require("./routes/candOfferR");
 const PortfolioRouter = require("./routes/portfolioR");
 const ModelPortfolioRouter = require("./routes/ModelPortfolioR");
 const AdminRouter = require("./routes/adminR");
+const NotifRouter = require("./routes/notificationR");
 
 app.use(
   cors({
@@ -51,6 +52,7 @@ app.use("/api/candidature", CandOfferRouter);
 app.use("/api/portfolio", PortfolioRouter);
 app.use("/api/ModelPortfolio", ModelPortfolioRouter);
 app.use("/api/admin", AdminRouter);
+app.use("/api/notification", NotifRouter);
 
 // upload image
 const storage = multer.diskStorage({
