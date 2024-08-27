@@ -27,21 +27,6 @@ const pageSchema = new mongoose.Schema({
   bloc: [blocSchema],
 }, { minimize: false });
 
-// const navSettingsSchema = new mongoose.Schema({
-//   navbar: {
-//     type: Object,
-//     default: {},
-//   },
-//   logo: {
-//     type: Object,
-//     default: {},
-//   },
-//   links: {
-//     type: Object,
-//     default: {},
-//   },
-// }, { minimize: false });
-
 const navSchema = new mongoose.Schema({
   id: {
     type: Number,

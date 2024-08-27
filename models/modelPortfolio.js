@@ -1,53 +1,69 @@
 const mongoose = require("mongoose");
 
-const blocSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    required: true,
+const blocSchema = new mongoose.Schema(
+  {
+    id: {
+      type: Number,
+      required: true,
+    },
+    type: {
+      type: String,
+      required: true,
+    },
+    settings: {
+      type: Object,
+      default: {},
+    },
   },
-  type: {
-    type: String,
-    required: true,
-  },
-  settings: {
-    type: Object,
-    default: {},
-  },
-});
+  { minimize: false }
+);
 
-const pageSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    required: true,
+const pageSchema = new mongoose.Schema(
+  {
+    id: {
+      type: Number,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    bloc: [blocSchema],
   },
-  name: {
-    type: String,
-    required: true,
-  },
-  bloc: [blocSchema],
-});
-const navSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    required: true,
-  },
-  type: {
-    type: String,
-    required: true,
-  },
-  settings: {
-    type: Object,
-    default: {},
-  },
-});
+  { minimize: false }
+);
 
-const portfSchema = new mongoose.Schema({
-  nom: {
-    type: String,
-    required: true,
+const navSchema = new mongoose.Schema(
+  {
+    id: {
+      type: Number,
+      required: true,
+    },
+    type: {
+      type: String,
+      required: true,
+    },
+    settings: {
+      type: Object,
+      default: {},
+    },
   },
-  navbar: [navSchema],
-  pages: [pageSchema],
-});
+  { minimize: false }
+);
+
+const portfSchema = new mongoose.Schema(
+  {
+    nom: {
+      type: String,
+      required: true,
+    },
+    navbar: {
+      type: navSchema,
+      required: true,
+    },
+    pages: [pageSchema],
+  },
+  { minimize: false }
+);
 
 module.exports = mongoose.model("ModelPortfolio", portfSchema);
