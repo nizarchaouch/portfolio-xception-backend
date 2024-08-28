@@ -30,15 +30,14 @@ const getNotif = async (req, res) => {
     const id = req.params.id;
     const notif = await notifModel.find({ idUser: id });
 
-    if (!notif.length) {
-      return res.status(404).json({ message: "Aucune notif trouvée." });
+    if (!notif || notif.length === 0) {
+      return res.status(204).json({ message: "Aucune notification trouvée." });
     }
+
     res.status(200).json({ notif });
   } catch (error) {
-    console.log(error);
-    return res
-      .status(500)
-      .json({ message: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
+    console.error("Erreur lors de la récupération des notifications :", error);
+    return res.status(500).json({ message: "Erreur interne du serveur." });
   }
 };
 
@@ -51,10 +50,14 @@ const markAllAsRead = async (req, res) => {
     );
 
     if (result.nModified === 0) {
-      return res.status(404).json({ message: "Aucune notification non lue trouvée" });
+      return res
+        .status(404)
+        .json({ message: "Aucune notification non lue trouvée" });
     }
 
-    res.status(200).json({ message: "Toutes les notifications marquées comme lues" });
+    res
+      .status(200)
+      .json({ message: "Toutes les notifications marquées comme lues" });
   } catch (error) {
     console.log(error);
     return res
@@ -66,5 +69,5 @@ const markAllAsRead = async (req, res) => {
 module.exports = {
   add,
   getNotif,
-  markAllAsRead
+  markAllAsRead,
 };
