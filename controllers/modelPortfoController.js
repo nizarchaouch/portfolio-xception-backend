@@ -73,4 +73,21 @@ const deltById = async (req, res) => {
   }
 };
 
-module.exports = { add, getById, getAll, deltById };
+const update = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const model = await portfoModel.findByIdAndUpdate(id, req.body, { new: true });
+    if (!model) {
+      return res
+        .status(404)
+        .json({ message: ERROR_MESSAGES.PORTFOLIO_NOT_FOUND });
+    }
+    res.status(200).json({ message: "update" });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
+  }
+};
+
+module.exports = { add, getById, getAll, deltById, update };
