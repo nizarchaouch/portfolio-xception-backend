@@ -102,6 +102,79 @@ const add = async (req, res) => {
     });
 
     await recruteur.save();
+    //send mail verifie
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.MY_MAIL,
+        pass: process.env.MY_PASSWORD,
+      },
+    });
+    const mailOptions = {
+      from: "nizar@gmail.com",
+      to: data.mail,
+      subject: "Ajouter comme recruteur sur PORTFOLIO XCEPTION",
+      html: `<!DOCTYPE html>
+      <html lang="fr">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Vérification d'e-mail</title>
+        <style>
+          .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+          }
+          h1 {
+            color: #333;
+          }
+          p {
+            margin-bottom: 20px;
+            color: #666;
+          }
+          button {
+            display: inline-block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #74b4f7;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+          }
+          button:hover {
+            background-color: #0056b3;
+          }
+          button a {
+            color: #fff;
+            text-decoration: none;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <p>Cher ${data.nom} ${data.prenom},</p>
+          <p>Bienvenue sur notre site en tant que recruteur, votre compte a été créé avec succès, Cliquez sur le bouton ci-dessous pour vous connecter :</p>
+          <p>Voter Mots de passe: ${data.password}</p>
+          <button><a href="http://localhost:8000/api/user/verifier/${data.mail}" style="color: #fff;">Se Connecter</a></button>
+        </div>
+      </body>
+      </html>
+        
+      `,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Failed to send email" });
+      } else {
+        console.log("Email sent: " + info.response);
+        return res.status(200).json({ message: "Email sent" });
+      }
+    });
 
     return res.status(201).json({ message: "Ajout réussi" });
   } catch (err) {
