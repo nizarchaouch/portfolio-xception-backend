@@ -118,6 +118,3 @@ This project uses **MongoDB** as the database system to store users, job offers,
 
 **Nizar Chaouch**
 
-## License
-
-This project was developed for academic purposes.
