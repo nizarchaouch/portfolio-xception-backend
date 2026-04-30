@@ -98,9 +98,6 @@ portfolio-xception-backend/
 ├── controllers/
 ├── models/
 ├── routes/
-├── middleware/
-├── config/
-├── utils/
 ├── package.json
 └── README.md
 ```
